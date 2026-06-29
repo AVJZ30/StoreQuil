@@ -2,9 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <title>StoreQuil — El mercado de los emprendedores ecuatorianos</title>
   <meta name="description" content="StoreQuil es el mercado digital de los emprendedores ecuatorianos. Descubre productos únicos de cientos de negocios locales y contáctalos directamente por WhatsApp." />
+  <meta name="theme-color" content="#2563EB" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563EB'/%3E%3Ctext x='50' y='68' font-family='system-ui,sans-serif' font-size='58' font-weight='800' text-anchor='middle' fill='white'%3ES%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,7 +22,7 @@
   <header class="navbar" id="navbar">
     <div class="container nav-inner">
       <a href="index.html" class="logo" aria-label="StoreQuil inicio">
-        <img src="https://i.pinimg.com/736x/d5/f2/1c/d5f21cb479b6d9823b26dd65dfed628e.jpg" alt="StoreQuil Logo" class="logo-img">
+        <img src="https://i.pinimg.com/736x/d5/f2/1c/d5f21cb479b6d9823b26dd65dfed628e.jpg" alt="StoreQuil Logo" class="logo-img" width="38" height="38">
         <span class="logo-text">Store<span>Quil</span></span>
       </a>
 
@@ -30,114 +33,114 @@
         <a href="#contacto" class="nav-link">Contacto</a>
       </nav>
 
-      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
   <!-- ========== HERO ========== -->
-  <section class="hero" id="inicio">
-    <div class="hero-bg" aria-hidden="true">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-    </div>
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+      </div>
 
-    <div class="container hero-inner">
-      <div class="hero-content reveal">
-        <span class="pill"><i class="fa-solid fa-bolt"></i> Hecho en Ecuador</span>
-        <h1 class="hero-title">Store<span class="grad">Quil</span></h1>
-        <p class="hero-subtitle">El mercado de los emprendedores ecuatorianos.</p>
-        <p class="hero-text">Descubre productos increíbles de cientos de emprendedores ecuatorianos.</p>
+      <div class="container hero-inner">
+        <div class="hero-content reveal">
+          <span class="pill"><i class="fa-solid fa-bolt"></i> Hecho en Ecuador</span>
+          <h1 class="hero-title">Store<span class="grad">Quil</span></h1>
+          <p class="hero-subtitle">El mercado de los emprendedores ecuatorianos.</p>
+          <p class="hero-text">Descubre productos increíbles de cientos de emprendedores ecuatorianos.</p>
 
-        <a href="tienda.html" class="btn btn-primary btn-lg" style="margin-top: 10px; display: inline-flex; font-size: 1.1rem; padding: 16px 32px;">
-          Ir a la Tienda <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+          <a href="tienda.html" class="btn btn-primary btn-lg">
+            Ir a la Tienda <i class="fa-solid fa-arrow-right"></i>
+          </a>
+
+          <div class="hero-stats">
+            <div><strong id="homeProductCount">...</strong><span>Productos</span></div>
+            <div><strong>100%</strong><span>Ecuatoriano</span></div>
+          </div>
+        </div>
+
+        <div class="hero-art reveal" aria-hidden="true">
+          <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#2563EB"/>
+                <stop offset="1" stop-color="#60A5FA"/>
+              </linearGradient>
+            </defs>
+            <circle cx="240" cy="240" r="200" fill="url(#g1)" opacity=".08"/>
+            <rect x="110" y="130" width="260" height="220" rx="24" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+            <rect x="135" y="160" width="210" height="110" rx="14" fill="#EFF6FF"/>
+            <circle cx="180" cy="215" r="22" fill="#2563EB"/>
+            <rect x="215" y="200" width="110" height="10" rx="5" fill="#CBD5E1"/>
+            <rect x="215" y="220" width="80" height="8" rx="4" fill="#E2E8F0"/>
+            <rect x="135" y="290" width="120" height="14" rx="7" fill="#0F172A"/>
+            <rect x="135" y="312" width="80" height="10" rx="5" fill="#94A3B8"/>
+            <rect x="285" y="290" width="60" height="32" rx="16" fill="#22C55E"/>
+            <circle cx="370" cy="120" r="34" fill="#FECACA"/>
+            <text x="370" y="128" text-anchor="middle" font-size="22" font-weight="800" fill="#DC2626">%</text>
+            <circle cx="90" cy="340" r="22" fill="#22C55E"/>
+            <path d="M82 340l6 6 12-12" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SOBRE NOSOTROS ========== -->
+    <section class="section" id="sobre">
+      <div class="container about-grid">
+        <div class="reveal">
+          <span class="pill"><i class="fa-solid fa-heart"></i> Nuestra misión</span>
+          <h2>Impulsamos el talento ecuatoriano</h2>
+          <p class="lead">StoreQuil nace en Guayaquil con un propósito claro: darle visibilidad a los emprendedores del país y conectarlos directamente con sus clientes, sin intermediarios.</p>
+          <ul class="check-list">
+            <li><i class="fa-solid fa-circle-check"></i> Publicar productos es rápido y sencillo.</li>
+            <li><i class="fa-solid fa-circle-check"></i> Contacto directo por WhatsApp.</li>
+          </ul>
+        </div>
+
+        <div class="about-cards reveal">
+          <div class="mini-card">
+            <i class="fa-solid fa-rocket"></i>
+            <h4>Visibilidad</h4>
+            <p>Tu negocio al alcance de miles de personas en todo Ecuador.</p>
+          </div>
+          <div class="mini-card">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+            <h4>Confianza</h4>
+            <p>Conexión directa con clientes reales, sin intermediarios.</p>
+          </div>
+          <div class="mini-card">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h4>Seguro</h4>
+            <p>Contacto verificable, siempre sabes con quién hablas.</p>
+          </div>
+          <div class="mini-card">
+            <i class="fa-solid fa-comments"></i>
+            <h4>Soporte</h4>
+            <p>Estamos para ayudarte a hacer crecer tu emprendimiento.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CTA BANNER ========== -->
+    <section class="cta-banner" id="contacto">
+      <div class="container cta-inner reveal">
+        <div>
+          <h2>¿Tienes un negocio?</h2>
+          <p>Únete a StoreQuil y llega a más clientes en todo el país.</p>
+        </div>
+        <a href="https://wa.me/593983492427" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+          <i class="fa-brands fa-whatsapp"></i> Escríbenos por WhatsApp
         </a>
-
-        <div class="hero-stats">
-          <div><strong id="homeProductCount">...</strong><span>Productos</span></div>
-          <div><strong>100%</strong><span>Ecuatoriano</span></div>
-        </div>
       </div>
-
-      <div class="hero-art reveal" aria-hidden="true">
-        <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#2563EB"/>
-              <stop offset="1" stop-color="#60A5FA"/>
-            </linearGradient>
-          </defs>
-          <circle cx="240" cy="240" r="200" fill="url(#g1)" opacity=".08"/>
-          <rect x="110" y="130" width="260" height="220" rx="24" fill="white" stroke="#E5E7EB" stroke-width="2"/>
-          <rect x="135" y="160" width="210" height="110" rx="14" fill="#EFF6FF"/>
-          <circle cx="180" cy="215" r="22" fill="#2563EB"/>
-          <rect x="215" y="200" width="110" height="10" rx="5" fill="#CBD5E1"/>
-          <rect x="215" y="220" width="80" height="8" rx="4" fill="#E2E8F0"/>
-          <rect x="135" y="290" width="120" height="14" rx="7" fill="#0F172A"/>
-          <rect x="135" y="312" width="80" height="10" rx="5" fill="#94A3B8"/>
-          <rect x="285" y="290" width="60" height="32" rx="16" fill="#22C55E"/>
-          <circle cx="370" cy="120" r="34" fill="#FECACA"/>
-          <text x="370" y="128" text-anchor="middle" font-size="22" font-weight="800" fill="#DC2626">%</text>
-          <circle cx="90" cy="340" r="22" fill="#22C55E"/>
-          <path d="M82 340l6 6 12-12" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SOBRE NOSOTROS ========== -->
-  <section class="section" id="sobre">
-    <div class="container about-grid">
-      <!-- Columna 1: Texto -->
-      <div class="reveal">
-        <span class="pill"><i class="fa-solid fa-heart"></i> Nuestra misión</span>
-        <h2>Impulsamos el talento ecuatoriano</h2>
-        <p class="lead">StoreQuil nace en Guayaquil con un propósito claro: darle visibilidad a los emprendedores del país y conectarlos directamente con sus clientes, sin intermediarios.</p>
-        <ul class="check-list">
-          <li><i class="fa-solid fa-circle-check"></i> Publicar productos es rápido y sencillo.</li>
-          <li><i class="fa-solid fa-circle-check"></i> Contacto directo por WhatsApp.</li>
-        </ul>
-      </div>
-
-      <!-- Columna 2: Tarjetas -->
-      <div class="about-cards reveal">
-        <div class="mini-card">
-          <i class="fa-solid fa-rocket"></i>
-          <h4>Visibilidad</h4>
-          <p>Tu negocio al alcance de miles de personas en todo Ecuador.</p>
-        </div>
-        <div class="mini-card">
-          <i class="fa-solid fa-hand-holding-heart"></i>
-          <h4>Confianza</h4>
-          <p>Conexión directa con clientes reales, sin intermediarios.</p>
-        </div>
-        <div class="mini-card">
-          <i class="fa-solid fa-shield-halved"></i>
-          <h4>Seguro</h4>
-          <p>Contacto verificable, siempre sabes con quién hablas.</p>
-        </div>
-        <div class="mini-card">
-          <i class="fa-solid fa-comments"></i>
-          <h4>Soporte</h4>
-          <p>Estamos para ayudarte a hacer crecer tu emprendimiento.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== CTA BANNER ========== -->
-  <section class="cta-banner" id="contacto">
-    <div class="container cta-inner reveal">
-      <div>
-        <h2>¿Tienes un negocio?</h2>
-        <p>Únete a StoreQuil y llega a más clientes en todo el país.</p>
-      </div>
-      <a href="https://wa.me/593983492427" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
-        <i class="fa-brands fa-whatsapp"></i> Escríbenos por WhatsApp
-      </a>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- ========== FOOTER ========== -->
   <footer class="footer">
@@ -145,7 +148,7 @@
       <div class="footer-inner">
         <div>
           <div class="logo">
-            <img src="https://i.pinimg.com/736x/d5/f2/1c/d5f21cb479b6d9823b26dd65dfed628e.jpg" alt="StoreQuil Logo" class="logo-img">
+            <img src="https://i.pinimg.com/736x/d5/f2/1c/d5f21cb479b6d9823b26dd65dfed628e.jpg" alt="StoreQuil Logo" class="logo-img" width="38" height="38" loading="lazy">
             <span class="logo-text">Store<span>Quil</span></span>
           </div>
           <p class="muted">El mercado digital de los emprendedores ecuatorianos. Descubre, conecta y compra local.</p>
