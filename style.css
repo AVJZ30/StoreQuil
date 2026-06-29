@@ -1,5 +1,5 @@
 /* =========================================================
-   StoreQuil — Hoja de estilos principal (FULL RESPONSIVE)
+   StoreQuil — Hoja de estilos principal (CORREGIDO)
    ========================================================= */
 
 /* ---------- Tokens ---------- */
@@ -40,7 +40,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   font-size: 16px;
-  scroll-padding-top: 80px; /* 🔥 CORRECCIÓN: Evita que el contenido se oculte bajo el navbar */
+  scroll-padding-top: 80px;
 }
 
 body {
@@ -236,6 +236,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
   height: 72px;
+  position: relative;
 }
 
 .logo {
@@ -244,7 +245,7 @@ textarea {
   gap: 10px;
   font-weight: 800;
   flex-shrink: 0;
-  z-index: 1001; /* 🔥 Asegura que el logo esté siempre visible */
+  z-index: 1001;
 }
 
 .logo-img {
@@ -264,6 +265,7 @@ textarea {
   color: var(--primary);
 }
 
+/* 🔥 CORRECCIÓN IMPORTANTE: Menú en desktop */
 .nav-links {
   display: flex;
   align-items: center;
@@ -913,6 +915,7 @@ textarea {
   transform: translateY(20px);
   transition: all var(--transition);
   cursor: pointer;
+  border: none;
 }
 
 .back-to-top.visible {
@@ -939,49 +942,17 @@ textarea {
 }
 
 /* =========================================================
-   RESPONSIVE DESIGN - TABLET
-   ========================================================= */
-@media (max-width: 1024px) {
-  .container {
-    padding: 0 20px;
-  }
-
-  .hero {
-    padding: 120px 0 60px;
-  }
-
-  .hero-inner {
-    gap: 40px;
-  }
-
-  .section {
-    padding: 72px 0;
-  }
-
-  .about-grid {
-    gap: 40px;
-  }
-
-  .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-  }
-
-  .filters {
-    gap: 10px;
-  }
-}
-
-/* =========================================================
-   RESPONSIVE DESIGN - TABLET PEQUEÑA
+   🔥 RESPONSIVE DESIGN - MÓVIL (CORREGIDO)
    ========================================================= */
 @media (max-width: 768px) {
+  /* Mostrar botón hamburguesa */
   .nav-toggle {
     display: flex;
     position: relative;
     z-index: 1001;
   }
 
+  /* 🔥 OCULTAR MENÚ POR DEFECTO EN MÓVIL */
   .nav-links {
     position: fixed;
     top: 0;
@@ -995,20 +966,40 @@ textarea {
     align-items: center;
     justify-content: center;
     gap: 20px;
-    transform: translateY(-100%);
+    transform: translateX(100%); /* 🔥 Cambiado: se oculta a la derecha */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
+    visibility: hidden; /* 🔥 Oculto por defecto */
+    opacity: 0; /* 🔥 Oculto por defecto */
   }
 
+  /* 🔥 MOSTRAR MENÚ SOLO CUANDO ESTÁ ABIERTO */
   .nav-links.open {
-    transform: translateY(0);
+    transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
   }
 
   .nav-link {
     font-size: 1.2rem;
     padding: 14px 24px;
     border-radius: 12px;
+    opacity: 0; /* Ocultos inicialmente para animación */
+    transform: translateX(20px);
+    transition: all 0.3s ease;
   }
+
+  /* Animar enlaces cuando el menú se abre */
+  .nav-links.open .nav-link {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Retrasos para animación escalonada */
+  .nav-links.open .nav-link:nth-child(1) { transition-delay: 0.1s; }
+  .nav-links.open .nav-link:nth-child(2) { transition-delay: 0.2s; }
+  .nav-links.open .nav-link:nth-child(3) { transition-delay: 0.3s; }
+  .nav-links.open .nav-link:nth-child(4) { transition-delay: 0.4s; }
 
   .hero-inner {
     grid-template-columns: 1fr;
@@ -1084,7 +1075,7 @@ textarea {
 }
 
 /* =========================================================
-   RESPONSIVE DESIGN - MÓVIL
+   RESPONSIVE DESIGN - TABLET PEQUEÑA
    ========================================================= */
 @media (max-width: 480px) {
   .container {
