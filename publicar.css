@@ -1,85 +1,106 @@
-body { 
-    font-family: Arial, sans-serif; 
-    background: #f4f4f4; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    min-height: 100vh; 
-    margin: 0; 
-    padding: 20px;
+/* StoreQuil — Estilos del formulario de publicación */
+
+.publish-main {
+  padding: 120px 0 80px;
+  min-height: 100vh;
+  background:
+    radial-gradient(60% 50% at 0% 0%, rgba(37, 99, 235, .06), transparent 60%),
+    radial-gradient(50% 40% at 100% 100%, rgba(37, 99, 235, .05), transparent 60%),
+    var(--bg-soft);
 }
 
-.form-container { 
-    background: white; 
-    padding: 30px; 
-    border-radius: 10px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-    width: 100%; 
-    max-width: 450px; 
+.publish-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 56px;
+  align-items: start;
 }
 
-h2 {
-    text-align: center;
-    margin-top: 0;
-    color: #333;
+.publish-side h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -.03em;
+  margin: 16px 0 14px;
+  line-height: 1.1;
+}
+.publish-side p {
+  color: var(--text-soft);
+  font-size: 1.05rem;
+  margin-bottom: 24px;
+}
+.publish-side .check-list { margin-bottom: 28px; }
+
+.tip {
+  display: flex; gap: 14px;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+}
+.tip i { color: var(--primary); font-size: 1.2rem; margin-top: 4px; }
+.tip strong { display: block; margin-bottom: 2px; }
+.tip p { color: var(--text-soft); font-size: .9rem; margin: 0; }
+
+.publish-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  box-shadow: var(--shadow);
 }
 
-form { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 15px; 
-    margin-bottom: 20px; 
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
-input, textarea { 
-    padding: 12px; 
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    font-size: 16px; 
-    font-family: inherit;
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.field label { font-size: .85rem; font-weight: 600; color: var(--text); }
+.field small { color: var(--text-muted); font-size: .8rem; }
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-soft);
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+  font-size: .95rem;
+}
+.field textarea { resize: vertical; min-height: 110px; }
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 0;
+  border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
 }
 
-textarea { 
-    resize: vertical; 
-    min-height: 80px; 
+.field input:invalid:not(:placeholder-shown) {
+  border-color: #FCA5A5;
 }
 
-button { 
-    padding: 15px; 
-    background: #007bff; 
-    color: white; 
-    border: none; 
-    border-radius: 5px; 
-    cursor: pointer; 
-    font-size: 16px; 
-    font-weight: bold;
-    transition: background 0.3s;
-}
+.btn-submit { width: 100%; justify-content: center; margin-top: 8px; }
+.form-note { color: var(--text-muted); font-size: .82rem; text-align: center; margin-top: 14px; }
 
-button:hover { 
-    background: #0056b3; 
+/* Éxito */
+.success-state { text-align: center; padding: 24px 8px; animation: cardIn .5s ease both; }
+.success-icon {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: #DCFCE7; color: #16A34A;
+  display: grid; place-items: center; margin: 0 auto 18px;
+  font-size: 2rem;
+  animation: pop .5s cubic-bezier(.34, 1.56, .64, 1) both;
 }
+@keyframes pop { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-state h2 { font-weight: 800; margin-bottom: 6px; }
+.success-state p { color: var(--text-soft); margin-bottom: 22px; }
 
-button:disabled {
-    background: #999;
-    cursor: not-allowed;
-}
-
-#mensaje-estado { 
-    text-align: center; 
-    font-weight: bold; 
-    margin-bottom: 15px; 
-    min-height: 20px;
-}
-
-.link-volver { 
-    display: block;
-    text-align: center;
-    color: #555; 
-    text-decoration: none; 
-}
-
-.link-volver:hover { 
-    text-decoration: underline; 
-    color: #000;
+@media (max-width: 900px) {
+  .publish-grid { grid-template-columns: 1fr; gap: 36px; }
+  .publish-card { padding: 24px; }
+  .grid-2 { grid-template-columns: 1fr; }
 }
