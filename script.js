@@ -1,36 +1,66 @@
 // =========================================================
-// StoreQuil — Script completo
+// StoreQuil — Script completo (FULL RESPONSIVE)
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // ========== 1. MENÚ MÓVIL ==========
+    // ========== 1. MENÚ MÓVIL MEJORADO ==========
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
+    const body = document.body;
 
     if (navToggle && navLinks) {
         navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
+            const isOpen = navLinks.classList.toggle('open');
             navToggle.classList.toggle('active');
+            
+            // Prevenir scroll cuando el menú está abierto
+            if (isOpen) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
+            
+            // Actualizar aria-expanded
+            navToggle.setAttribute('aria-expanded', isOpen);
         });
 
+        // Cerrar menú al hacer clic en un enlace
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('open');
                 navToggle.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
+                body.style.overflow = '';
             });
+        });
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('open');
+                navToggle.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
+                body.style.overflow = '';
+            }
         });
     }
 
     // ========== 2. NAVBAR SCROLL ==========
     const navbar = document.getElementById('navbar');
     if (navbar) {
+        let lastScroll = 0;
+        
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
+            const currentScroll = window.scrollY;
+            
+            if (currentScroll > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
+            
+            lastScroll = currentScroll;
         });
     }
 
@@ -106,9 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
                     <i class="fa-solid fa-circle-exclamation" style="font-size: 3rem; color: #EF4444;"></i>
                     <h3>Error de conexión</h3>
-                    <p>No pudimos cargar los productos.</p>
-                    <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: #2563EB; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        Reintentar
+                    <p>No pudimos cargar los productos. Verifica tu conexión a internet.</p>
+                    <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: #2563EB; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">
+                        <i class="fa-solid fa-rotate"></i> Reintentar
                     </button>
                 </div>`;
         }
@@ -167,6 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fa-solid fa-store-slash"></i>
                     <h3>Sin resultados</h3>
                     <p>No se encontraron productos con esos filtros o términos de búsqueda.</p>
+                    <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: #2563EB; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        Mostrar todos los productos
+                    </button>
                 </div>`;
             return;
         }
@@ -188,7 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="product-image">
                     ${oferta ? '<span class="offer-badge">🔥 Oferta</span>' : ''}
                     ${categoria ? `<span class="category-badge">${categoria}</span>` : ''}
-                    <img src="${imagen}" alt="${nombre}" loading="lazy" onerror="this.style.display='none'">
+                    ${imagen ? 
+                        `<img src="${imagen}" alt="${nombre}" loading="lazy" onerror="this.parentElement.style.background='#F1F5F9'; this.style.display='none'; this.nextElementSibling.style.display='flex';">` :
+                        `<div style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; font-size:3rem;">📦</div>`
+                    }
                 </div>
                 <div class="product-body">
                     ${negocio ? `<span class="product-business">${negocio}</span>` : ''}
@@ -198,20 +234,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="product-foot">
                     ${whatsapp ? 
-                        `<a href="https://wa.me/593${whatsapp}" target="_blank" rel="noopener" class="btn btn-whatsapp">
+                        `<a href="https://wa.me/593${whatsapp}" target="_blank" rel="noopener" class="btn btn-whatsapp" aria-label="Contactar por WhatsApp">
                             <i class="fa-brands fa-whatsapp"></i> Contactar
-                        </a>` : ''}
+                        </a>` : 
+                        `<button class="btn btn-whatsapp" disabled style="opacity: 0.5; cursor: not-allowed;">
+                            <i class="fa-solid fa-phone-slash"></i> Sin contacto
+                        </button>`
+                    }
                 </div>
             `;
             productsGrid.appendChild(card);
         });
     }
 
-    // Listeners de los filtros y el buscador
-    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    // Listeners de los filtros con debounce para mejor rendimiento
+    let debounceTimer;
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(applyFilters, 300);
+        });
+    }
     if (filterCategory) filterCategory.addEventListener('change', applyFilters);
     if (sortPrice) sortPrice.addEventListener('change', applyFilters);
     if (onlyOffers) onlyOffers.addEventListener('change', applyFilters);
 
+    // Cargar productos
     fetchProducts();
 });
