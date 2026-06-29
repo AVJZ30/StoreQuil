@@ -1,97 +1,94 @@
 // =========================================================
-// StoreQuil — Lógica Principal
+// StoreQuil — Lógica Completa para Tienda
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  // --- 1. Set current year in footer ---
-  const yearEl = document.getElementById('year');
-  if(yearEl) yearEl.textContent = new Date().getFullYear();
+    // Variables de los elementos del DOM
+    const productsGrid = document.getElementById('productsGrid');
+    const filterCategory = document.getElementById('filterCategory');
+    const sortPrice = document.getElementById('sortPrice');
+    const onlyOffers = document.getElementById('onlyOffers');
+    const resultsCount = document.getElementById('resultsCount');
+    const emptyState = document.getElementById('emptyState');
 
-  // --- 2. Navbar & Mobile Menu ---
-  const navbar = document.getElementById('navbar');
-  const navToggle = document.getElementById('navToggle');
-  const navLinks = document.getElementById('navLinks');
+    let allProducts = []; // Aquí almacenaremos la data cruda
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
+    // 1. Obtener los productos desde Google Sheets
+    async function fetchProducts() {
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzaBo8lu9zLlHM39lslJP076mMnh1UnuxiiFaVpV5Xth0_mwngEsjqVoi1blWHclm-OOw/exec';
+        try {
+            const response = await fetch(API_URL);
+            allProducts = await response.json();
+            applyFilters(); // Renderizar una vez cargados
+        } catch (error) {
+            console.error("Error al cargar productos:", error);
+            productsGrid.innerHTML = '<p>Error al conectar con la tienda. Intenta recargar.</p>';
+        }
     }
-  });
 
-  navToggle.addEventListener('click', () => {
-    navToggle.classList.toggle('active');
-    navLinks.classList.toggle('open');
-  });
+    // 2. Lógica para filtrar y ordenar
+    function applyFilters() {
+        let filtered = [...allProducts];
 
-  // --- 3. Scroll Reveal Animations ---
-  const reveals = document.querySelectorAll('.reveal');
-  const revealOnScroll = () => {
-    const windowHeight = window.innerHeight;
-    reveals.forEach(el => {
-      const elementTop = el.getBoundingClientRect().top;
-      if (elementTop < windowHeight - 60) {
-        el.classList.add('visible');
-      }
+        // Filtro por Categoría
+        if (filterCategory.value && filterCategory.value !== "Todas") {
+            filtered = filtered.filter(p => p['Categoría'] === filterCategory.value);
+        }
+
+        // Filtro Solo Ofertas
+        if (onlyOffers.checked) {
+            filtered = filtered.filter(p => p['Oferta'] === "Sí" || p['Oferta'] === true);
+        }
+
+        // Ordenamiento por Precio
+        if (sortPrice.value === 'asc') {
+            filtered.sort((a, b) => parseFloat(a['Precio']) - parseFloat(b['Precio']));
+        } else if (sortPrice.value === 'desc') {
+            filtered.sort((a, b) => parseFloat(b['Precio']) - parseFloat(a['Precio']));
+        }
+
+        renderProducts(filtered);
+    }
+
+    // 3. Renderizar productos en el HTML
+    function renderProducts(products) {
+        productsGrid.innerHTML = '';
+        resultsCount.textContent = `${products.length} resultados encontrados`;
+        
+        if (products.length === 0) {
+            emptyState.classList.remove('hidden');
+        } else {
+            emptyState.classList.add('hidden');
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">
+                        ${(p['Oferta'] === "Sí" || p['Oferta'] === true) ? '<span class="offer-badge">Oferta</span>' : ''}
+                        <img src="${p['Link de la imagen']}" alt="${p['Nombre del producto']}">
+                    </div>
+                    <div class="product-body">
+                        <span class="product-business">${p['Nombre del negocio']}</span>
+                        <h3 class="product-name">${p['Nombre del producto']}</h3>
+                        <p class="product-desc">${p['Descripción']}</p>
+                        <div class="product-price">$${p['Precio']}</div>
+                    </div>
+                    <div class="product-foot">
+                        <a href="https://wa.me/${p['WhatsApp']}" target="_blank" class="btn btn-whatsapp">
+                            <i class="fa-brands fa-whatsapp"></i> Contactar
+                        </a>
+                    </div>
+                `;
+                productsGrid.appendChild(card);
+            });
+        }
+    }
+
+    // 4. Listeners para detectar cambios en los filtros
+    [filterCategory, sortPrice, onlyOffers].forEach(el => {
+        el.addEventListener('change', applyFilters);
     });
-  };
-  window.addEventListener('scroll', revealOnScroll);
-  revealOnScroll(); // Trigger on load
 
-
-  // --- 4. Lógica de la Tienda (Solo se ejecuta en tienda.html) ---
-  const categoriesGrid = document.getElementById('categoriesGrid');
-  if(categoriesGrid) {
-    
-    // Categorías (Las que me enviaste)
-    const categorias = [
-      { id: 'comida', name: 'Comida', emoji: '🍔' },
-      { id: 'ropa', name: 'Ropa', emoji: '👕' },
-      { id: 'belleza', name: 'Belleza', emoji: '💄' },
-      { id: 'tecnologia', name: 'Tecnología', emoji: '📱' },
-      { id: 'hogar', name: 'Hogar', emoji: '🏠' },
-      { id: 'mascotas', name: 'Mascotas', emoji: '🐶' },
-      { id: 'regalos', name: 'Regalos', emoji: '🎁' },
-      { id: 'servicios', name: 'Servicios', emoji: '🛠' },
-      { id: 'educacion', name: 'Educación', emoji: '📚' },
-      { id: 'automotriz', name: 'Automotriz', emoji: '🚗' },
-      { id: 'videojuegos', name: 'Videojuegos', emoji: '🎮' },
-      { id: 'otros', name: 'Otros', emoji: '📦' }
-    ];
-
-    // Renderizar Categorías en la grilla y en el select
-    const filterSelect = document.getElementById('filterCategory');
-    categorias.forEach(cat => {
-      // Cards
-      const card = document.createElement('div');
-      card.className = 'category-card';
-      card.innerHTML = `<span class="emoji">${cat.emoji}</span><span class="name">${cat.name}</span>`;
-      card.onclick = () => {
-        filterSelect.value = cat.id;
-        // Aquí puedes agregar la función para filtrar productos si los tuvieras.
-        alert(`Filtrar por: ${cat.name}`);
-      };
-      categoriesGrid.appendChild(card);
-
-      // Select
-      const option = document.createElement('option');
-      option.value = cat.id;
-      option.textContent = cat.name;
-      filterSelect.appendChild(option);
-    });
-
-    // Simular carga de productos y quitar skeletons
-    setTimeout(() => {
-      const productsGrid = document.getElementById('productsGrid');
-      productsGrid.innerHTML = ''; // Limpiamos skeletons
-
-      // Mensaje de que no hay productos todavía
-      const emptyState = document.getElementById('emptyState');
-      emptyState.classList.remove('hidden');
-
-      const resultsCount = document.getElementById('resultsCount');
-      resultsCount.textContent = "0 resultados";
-    }, 1500);
-  }
+    // Ejecutar inicialización
+    fetchProducts();
 });
