@@ -40,6 +40,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   font-size: 16px;
+  scroll-padding-top: 80px; /* 🔥 CORRECCIÓN: Evita que el contenido se oculte bajo el navbar */
 }
 
 body {
@@ -166,6 +167,17 @@ textarea {
   font-size: 1rem;
 }
 
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
 .btn::after {
   content: '';
   position: absolute;
@@ -232,6 +244,7 @@ textarea {
   gap: 10px;
   font-weight: 800;
   flex-shrink: 0;
+  z-index: 1001; /* 🔥 Asegura que el logo esté siempre visible */
 }
 
 .logo-img {
@@ -277,6 +290,7 @@ textarea {
   gap: 5px;
   padding: 8px;
   z-index: 1001;
+  position: relative;
 }
 
 .nav-toggle span {
@@ -715,55 +729,6 @@ textarea {
   padding: 0 18px 18px;
 }
 
-.skeleton-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  height: 380px;
-  overflow: hidden;
-  position: relative;
-}
-
-.skeleton-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(15, 23, 42, 0.05),
-    transparent
-  );
-  animation: shimmer 1.4s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-soft);
-}
-
-.empty-state i {
-  font-size: 3rem;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
-
-.empty-state h3 {
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-
 /* ---------- Sobre nosotros ---------- */
 .about-grid {
   display: grid;
@@ -928,6 +893,39 @@ textarea {
   color: #94a3b8;
 }
 
+/* ---------- Back to top button ---------- */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--primary-600);
+  transform: translateY(-3px);
+}
+
 /* ---------- Reveal animation ---------- */
 .reveal {
   opacity: 0;
@@ -980,6 +978,8 @@ textarea {
 @media (max-width: 768px) {
   .nav-toggle {
     display: flex;
+    position: relative;
+    z-index: 1001;
   }
 
   .nav-links {
@@ -997,7 +997,7 @@ textarea {
     gap: 20px;
     transform: translateY(-100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 999;
+    z-index: 1000;
   }
 
   .nav-links.open {
@@ -1146,23 +1146,11 @@ textarea {
   .product-foot {
     padding: 0 14px 14px;
   }
-}
-
-/* =========================================================
-   ORIENTACIÓN HORIZONTAL EN MÓVIL
-   ========================================================= */
-@media (max-width: 768px) and (orientation: landscape) {
-  .hero {
-    padding: 90px 0 40px;
-    min-height: auto;
-  }
-
-  .nav-links {
-    padding: 20px;
-  }
-
-  .nav-link {
-    font-size: 1rem;
-    padding: 10px 20px;
+  
+  .back-to-top {
+    bottom: 16px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
   }
 }
