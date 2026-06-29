@@ -7,13 +7,10 @@
   <meta name="description" content="StoreQuil es el mercado digital de los emprendedores ecuatorianos. Descubre productos únicos de cientos de negocios locales y contáctalos directamente por WhatsApp." />
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563EB'/%3E%3Ctext x='50' y='68' font-family='system-ui,sans-serif' font-size='58' font-weight='800' text-anchor='middle' fill='white'%3ES%3C/text%3E%3C/svg%3E" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -51,15 +48,12 @@
         <p class="hero-subtitle">El mercado de los emprendedores ecuatorianos.</p>
         <p class="hero-text">Descubre productos increíbles de cientos de emprendedores ecuatorianos.</p>
 
-        <form class="search-hero" action="tienda.html" method="GET" role="search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="search" name="q" placeholder="¿Qué estás buscando hoy?" aria-label="Buscar productos" />
-          <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
+        <a href="tienda.html" class="btn btn-primary btn-lg" style="margin-top: 10px; display: inline-flex; font-size: 1.1rem; padding: 16px 32px;">
+          Ir a la Tienda <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+        </a>
 
         <div class="hero-stats">
-          <div><strong>+100</strong><span>Productos</span></div>
-          <div><strong>+50</strong><span>Negocios</span></div>
+          <div><strong id="homeProductCount">...</strong><span>Productos</span></div>
           <div><strong>100%</strong><span>Ecuatoriano</span></div>
         </div>
       </div>
@@ -99,57 +93,11 @@
         <ul class="check-list">
           <li><i class="fa-solid fa-circle-check"></i> Publicar productos es rápido y sencillo.</li>
           <li><i class="fa-solid fa-circle-check"></i> Contacto directo por WhatsApp.</li>
-          <li><i class="fa-solid fa-circle-check"></i> Plataforma 100% ecuatoriana.</li>
         </ul>
       </div>
-      <div class="about-cards reveal">
-        <div class="mini-card"><i class="fa-solid fa-store"></i><h4>Negocios locales</h4><p>Apoya a quienes emprenden cerca de ti.</p></div>
-        <div class="mini-card"><i class="fa-solid fa-shield-halved"></i><h4>Compras seguras</h4><p>Conoces al vendedor antes de comprar.</p></div>
-        <div class="mini-card"><i class="fa-solid fa-rocket"></i><h4>Rápido y fácil</h4><p>Encuentra lo que buscas en segundos.</p></div>
-        <div class="mini-card"><i class="fa-solid fa-mobile-screen"></i><h4>Desde tu celular</h4><p>Optimizado para cualquier dispositivo.</p></div>
-      </div>
     </div>
   </section>
-
-  <section class="cta-banner" id="contacto">
-    <div class="container cta-inner reveal">
-      <div>
-        <h2>¿Tienes un emprendimiento?</h2>
-        <p>Contáctate con nosotros y llega a miles de ecuatorianos.</p>
-      </div>
-      <a href="https://wa.me/593963023351" target="_blank" class="btn btn-primary btn-lg">
-        <i class="fa-brands fa-whatsapp"></i> Contáctate
-      </a>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div>
-        <a href="index.html" class="logo">
-          <img src="https://i.pinimg.com/736x/d5/f2/1c/d5f21cb479b6d9823b26dd65dfed628e.jpg" alt="StoreQuil Logo" class="logo-img">
-          <span class="logo-text">Store<span>Quil</span></span>
-        </a>
-        <p class="muted">El mercado de los emprendedores ecuatorianos.</p>
-      </div>
-
-      <div>
-        <h5>Navegación</h5>
-        <a href="index.html">Inicio</a>
-        <a href="tienda.html">Categorías y Productos</a>
-        <a href="#sobre">Sobre nosotros</a>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <span>© <span id="year"></span> StoreQuil. Todos los derechos reservados.</span>
-      <span>Hecho en Guayaquil, Ecuador.</span>
-    </div>
-  </footer>
-
-  <script>
-    // Año automático
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  
   <script src="script.js"></script>
 </body>
 </html>
