@@ -1,19 +1,9 @@
 // =========================================================
-// StoreQuil — Código Completo
+// StoreQuil — Lógica Completa para Tienda
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. Menú Móvil ---
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
-    if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            navToggle.classList.toggle('active');
-            navLinks.classList.toggle('open');
-        });
-    }
-
-    // --- 2. Lógica de Tienda ---
+    // Variables de los elementos del DOM
     const productsGrid = document.getElementById('productsGrid');
     const filterCategory = document.getElementById('filterCategory');
     const sortPrice = document.getElementById('sortPrice');
@@ -21,43 +11,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsCount = document.getElementById('resultsCount');
     const emptyState = document.getElementById('emptyState');
 
-    let allProducts = [];
+    let allProducts = []; // Aquí almacenaremos la data cruda
 
+    // 1. Obtener los productos desde Google Sheets
     async function fetchProducts() {
         const API_URL = 'https://script.google.com/macros/s/AKfycbzaBo8lu9zLlHM39lslJP076mMnh1UnuxiiFaVpV5Xth0_mwngEsjqVoi1blWHclm-OOw/exec';
         try {
             const response = await fetch(API_URL);
             allProducts = await response.json();
-            applyFilters();
+            applyFilters(); // Renderizar una vez cargados
         } catch (error) {
-            console.error("Error al cargar:", error);
-            if (productsGrid) productsGrid.innerHTML = '<p>Error al cargar productos.</p>';
+            console.error("Error al cargar productos:", error);
+            productsGrid.innerHTML = '<p>Error al conectar con la tienda. Intenta recargar.</p>';
         }
     }
 
+    // 2. Lógica para filtrar y ordenar
     function applyFilters() {
         let filtered = [...allProducts];
-        if (filterCategory?.value && filterCategory.value !== "Todas") {
+
+        // Filtro por Categoría
+        if (filterCategory.value && filterCategory.value !== "Todas") {
             filtered = filtered.filter(p => p['Categoría'] === filterCategory.value);
         }
-        if (onlyOffers?.checked) {
+
+        // Filtro Solo Ofertas
+        if (onlyOffers.checked) {
             filtered = filtered.filter(p => p['Oferta'] === "Sí" || p['Oferta'] === true);
         }
-        if (sortPrice?.value === 'asc') filtered.sort((a, b) => parseFloat(a['Precio']) - parseFloat(b['Precio']));
-        if (sortPrice?.value === 'desc') filtered.sort((a, b) => parseFloat(b['Precio']) - parseFloat(a['Precio']));
-        
+
+        // Ordenamiento por Precio
+        if (sortPrice.value === 'asc') {
+            filtered.sort((a, b) => parseFloat(a['Precio']) - parseFloat(b['Precio']));
+        } else if (sortPrice.value === 'desc') {
+            filtered.sort((a, b) => parseFloat(b['Precio']) - parseFloat(a['Precio']));
+        }
+
         renderProducts(filtered);
     }
 
+    // 3. Renderizar productos en el HTML
     function renderProducts(products) {
-        if (!productsGrid) return;
         productsGrid.innerHTML = '';
-        if (resultsCount) resultsCount.textContent = `${products.length} resultados`;
+        resultsCount.textContent = `${products.length} resultados encontrados`;
         
         if (products.length === 0) {
-            if (emptyState) emptyState.classList.remove('hidden');
+            emptyState.classList.remove('hidden');
         } else {
-            if (emptyState) emptyState.classList.add('hidden');
+            emptyState.classList.add('hidden');
             products.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -83,8 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    if (productsGrid) {
-        [filterCategory, sortPrice, onlyOffers].forEach(el => el?.addEventListener('change', applyFilters));
-        fetchProducts();
-    }
+    // 4. Listeners para detectar cambios en los filtros
+    [filterCategory, sortPrice, onlyOffers].forEach(el => {
+        el.addEventListener('change', applyFilters);
+    });
+
+    // Ejecutar inicialización
+    fetchProducts();
 });
