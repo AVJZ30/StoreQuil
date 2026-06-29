@@ -262,3 +262,70 @@ input, select, textarea { font: inherit; color: inherit; }
   .footer-inner { grid-template-columns: 1fr; gap: 28px; }
   .about-cards { grid-template-columns: 1fr; }
 }
+/* =========================================================
+   NUEVOS ESTILOS: BARRA DE BÚSQUEDA EN TIENDA
+   ========================================================= */
+
+.search-bar-tienda {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 12px 18px;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), border-color var(--transition);
+  margin-bottom: 8px;
+}
+
+.search-bar-tienda:focus-within {
+  box-shadow: var(--shadow);
+  border-color: var(--primary);
+}
+
+.search-bar-tienda i {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.search-bar-tienda input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1rem;
+  color: var(--text);
+  width: 100%;
+}
+
+.search-bar-tienda input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Ajustes Responsive Adicionales para los filtros */
+@media (max-width: 720px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-group {
+    width: 100%;
+  }
+  
+  .filter-group select {
+    width: 100%;
+  }
+
+  .switch {
+    margin-top: 8px;
+  }
+  
+  .results-count {
+    margin-left: 0;
+    margin-top: 8px;
+    text-align: center;
+  }
+}
