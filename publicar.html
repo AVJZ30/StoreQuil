@@ -1,30 +1,150 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publicar Producto</title>
-    <link rel="stylesheet" href="publicar.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publicar producto — StoreQuil</title>
+  <meta name="description" content="Publica gratis tu producto o servicio en StoreQuil y llega a miles de ecuatorianos." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563EB'/%3E%3Ctext x='50' y='68' font-family='system-ui,sans-serif' font-size='58' font-weight='800' text-anchor='middle' fill='white'%3ES%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="publicar.css" />
 </head>
 <body>
-    <div class="form-container">
-        <h2>Subir Nuevo Producto</h2>
-        <form id="publicar-form">
-            <input type="text" id="nombre" placeholder="Nombre del producto" required>
-            <input type="text" id="negocio" placeholder="Nombre del negocio" required>
-            <textarea id="descripcion" placeholder="Descripción breve" required></textarea>
-            <input type="url" id="imagen" placeholder="Link de la imagen (URL)" required>
-            <input type="text" id="whatsapp" placeholder="Tu número de WhatsApp (ej: 5939...)" required>
-            <input type="number" step="0.01" id="precio" placeholder="Precio ($)" required>
-            <input type="text" id="categoria" placeholder="Categoría (ej: Ropa, Comida...)" required>
-            <input type="text" id="oferta" placeholder="Oferta (Opcional)">
-            
-            <button type="submit" id="btn-submit">Publicar Producto</button>
-        </form>
-        <p id="mensaje-estado"></p>
-        <a href="index.html" class="link-volver">⬅ Volver al catálogo</a>
-    </div>
 
-    <script src="publicar.js"></script>
+  <header class="navbar scrolled" id="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">S</span>
+        <span class="logo-text">Store<span>Quil</span></span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html#inicio" class="nav-link">Inicio</a>
+        <a href="index.html#categorias" class="nav-link">Categorías</a>
+        <a href="publicar.html" class="nav-link">Publicar producto</a>
+        <a href="index.html#sobre" class="nav-link">Sobre nosotros</a>
+        <a href="index.html#contacto" class="nav-link">Contacto</a>
+        <a href="#" class="btn btn-primary btn-nav">Iniciar sesión</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="publish-main">
+    <div class="container publish-grid">
+
+      <aside class="publish-side">
+        <span class="pill"><i class="fa-solid fa-store"></i> Es 100% gratis</span>
+        <h1>Publica tu producto en <span class="grad">StoreQuil</span></h1>
+        <p>Conecta con miles de ecuatorianos que buscan lo que ofreces. Sin comisiones, sin intermediarios.</p>
+
+        <ul class="check-list">
+          <li><i class="fa-solid fa-circle-check"></i> Publicación inmediata</li>
+          <li><i class="fa-solid fa-circle-check"></i> Contacto directo por WhatsApp</li>
+          <li><i class="fa-solid fa-circle-check"></i> Sin pagos ni suscripciones</li>
+        </ul>
+
+        <div class="tip">
+          <i class="fa-regular fa-lightbulb"></i>
+          <div>
+            <strong>Consejo</strong>
+            <p>Usa una foto de buena calidad. Los productos con foto se contactan hasta 5× más.</p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="publish-card">
+        <form id="publishForm" novalidate>
+          <div class="grid-2">
+            <div class="field">
+              <label for="nombre">Nombre del producto *</label>
+              <input id="nombre" name="nombre" type="text" required placeholder="Ej: Brownie de chocolate" />
+            </div>
+            <div class="field">
+              <label for="negocio">Nombre del negocio *</label>
+              <input id="negocio" name="negocio" type="text" required placeholder="Ej: Dulce Antojo EC" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="descripcion">Descripción *</label>
+            <textarea id="descripcion" name="descripcion" rows="4" required placeholder="Cuéntales a tus clientes qué hace especial tu producto."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="imagen">Link de la imagen *</label>
+            <input id="imagen" name="imagen" type="url" required placeholder="https://..." />
+            <small>Pega la URL de la imagen (puedes subirla a Google Drive público, Imgur, etc.)</small>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="whatsapp">WhatsApp *</label>
+              <input id="whatsapp" name="whatsapp" type="tel" required placeholder="0991234567" />
+            </div>
+            <div class="field">
+              <label for="precio">Precio (USD) *</label>
+              <input id="precio" name="precio" type="number" min="0" step="0.01" required placeholder="0.00" />
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="categoria">Categoría *</label>
+              <select id="categoria" name="categoria" required>
+                <option value="">Selecciona una categoría</option>
+                <option>Comida</option>
+                <option>Ropa</option>
+                <option>Belleza</option>
+                <option>Tecnología</option>
+                <option>Hogar</option>
+                <option>Mascotas</option>
+                <option>Regalos</option>
+                <option>Servicios</option>
+                <option>Educación</option>
+                <option>Automotriz</option>
+                <option>Videojuegos</option>
+                <option>Otros</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="oferta">¿Está en oferta?</label>
+              <select id="oferta" name="oferta">
+                <option value="No">No</option>
+                <option value="Sí">Sí 🔥</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-submit">
+            <i class="fa-solid fa-paper-plane"></i> Publicar producto
+          </button>
+
+          <p class="form-note">Al publicar aceptas que tu producto sea visible en StoreQuil.</p>
+        </form>
+
+        <div class="success-state hidden" id="successState">
+          <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+          <h2>¡Listo!</h2>
+          <p>Tu producto se enviará para revisión. Pronto aparecerá en StoreQuil.</p>
+          <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i> Volver al inicio</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-bottom" style="border-top:0">
+      <span>© <span id="year"></span> StoreQuil. Todos los derechos reservados.</span>
+      <span>Hecho con <i class="fa-solid fa-heart" style="color:#EF4444"></i> en Guayaquil, Ecuador.</span>
+    </div>
+  </footer>
+
+  <script src="publicar.js"></script>
 </body>
 </html>
