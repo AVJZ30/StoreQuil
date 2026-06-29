@@ -1,9 +1,21 @@
 // =========================================================
-// StoreQuil — Lógica Completa para Tienda
+// StoreQuil — Lógica Completa y Segura
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Variables de los elementos del DOM
+    // 1. Navbar & Mobile Menu (Esto funciona en todas las páginas)
+    const navbar = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+    }
+
+    // 2. Lógica específica de la Tienda
     const productsGrid = document.getElementById('productsGrid');
     const filterCategory = document.getElementById('filterCategory');
     const sortPrice = document.getElementById('sortPrice');
@@ -11,36 +23,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsCount = document.getElementById('resultsCount');
     const emptyState = document.getElementById('emptyState');
 
-    let allProducts = []; // Aquí almacenaremos la data cruda
+    let allProducts = [];
 
-    // 1. Obtener los productos desde Google Sheets
+    // Función para obtener productos (API)
     async function fetchProducts() {
         const API_URL = 'https://script.google.com/macros/s/AKfycbzaBo8lu9zLlHM39lslJP076mMnh1UnuxiiFaVpV5Xth0_mwngEsjqVoi1blWHclm-OOw/exec';
         try {
             const response = await fetch(API_URL);
             allProducts = await response.json();
-            applyFilters(); // Renderizar una vez cargados
+            applyFilters(); 
         } catch (error) {
             console.error("Error al cargar productos:", error);
-            productsGrid.innerHTML = '<p>Error al conectar con la tienda. Intenta recargar.</p>';
+            if (productsGrid) productsGrid.innerHTML = '<p>Error al conectar con la tienda. Intenta recargar.</p>';
         }
     }
 
-    // 2. Lógica para filtrar y ordenar
+    // Función para filtrar y ordenar
     function applyFilters() {
         let filtered = [...allProducts];
 
-        // Filtro por Categoría
         if (filterCategory.value && filterCategory.value !== "Todas") {
             filtered = filtered.filter(p => p['Categoría'] === filterCategory.value);
         }
 
-        // Filtro Solo Ofertas
         if (onlyOffers.checked) {
             filtered = filtered.filter(p => p['Oferta'] === "Sí" || p['Oferta'] === true);
         }
 
-        // Ordenamiento por Precio
         if (sortPrice.value === 'asc') {
             filtered.sort((a, b) => parseFloat(a['Precio']) - parseFloat(b['Precio']));
         } else if (sortPrice.value === 'desc') {
@@ -50,15 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProducts(filtered);
     }
 
-    // 3. Renderizar productos en el HTML
+    // Función para dibujar los productos
     function renderProducts(products) {
         productsGrid.innerHTML = '';
-        resultsCount.textContent = `${products.length} resultados encontrados`;
+        if (resultsCount) resultsCount.textContent = `${products.length} resultados encontrados`;
         
         if (products.length === 0) {
-            emptyState.classList.remove('hidden');
+            if (emptyState) emptyState.classList.remove('hidden');
         } else {
-            emptyState.classList.add('hidden');
+            if (emptyState) emptyState.classList.add('hidden');
             products.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -84,11 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. Listeners para detectar cambios en los filtros
-    [filterCategory, sortPrice, onlyOffers].forEach(el => {
-        el.addEventListener('change', applyFilters);
-    });
-
-    // Ejecutar inicialización
-    fetchProducts();
+    // 3. Inicialización segura: Solo ejecutamos si estamos en la página de la tienda
+    if (productsGrid && filterCategory && sortPrice && onlyOffers) {
+        [filterCategory, sortPrice, onlyOffers].forEach(el => {
+            el.addEventListener('change', applyFilters);
+        });
+        fetchProducts();
+    }
 });
