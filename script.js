@@ -3,44 +3,49 @@
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Variables de los elementos del DOM
+    // Elementos del DOM
     const productsGrid = document.getElementById('productsGrid');
     const filterCategory = document.getElementById('filterCategory');
     const sortPrice = document.getElementById('sortPrice');
     const onlyOffers = document.getElementById('onlyOffers');
     const resultsCount = document.getElementById('resultsCount');
-    const emptyState = document.getElementById('emptyState');
 
-    let allProducts = []; // Aquí almacenaremos la data cruda
+    let allProducts = [];
 
-    // 1. Obtener los productos desde Google Sheets
+    // 1. Obtener productos desde Google Sheets
     async function fetchProducts() {
         const API_URL = 'https://script.google.com/macros/s/AKfycbzaBo8lu9zLlHM39lslJP076mMnh1UnuxiiFaVpV5Xth0_mwngEsjqVoi1blWHclm-OOw/exec';
         try {
             const response = await fetch(API_URL);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             allProducts = await response.json();
-            applyFilters(); // Renderizar una vez cargados
+            applyFilters();
         } catch (error) {
             console.error("Error al cargar productos:", error);
-            productsGrid.innerHTML = '<p>Error al conectar con la tienda. Intenta recargar.</p>';
+            productsGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; color: #EF4444;"></i>
+                    <p style="margin-top: 1rem;">Error al conectar con la tienda. Intenta recargar.</p>
+                </div>`;
         }
     }
 
-    // 2. Lógica para filtrar y ordenar
+    // 2. Aplicar filtros y ordenamiento
     function applyFilters() {
         let filtered = [...allProducts];
 
-        // Filtro por Categoría
-        if (filterCategory.value && filterCategory.value !== "Todas") {
-            filtered = filtered.filter(p => p['Categoría'] === filterCategory.value);
+        // Filtro por categoría
+        const categoriaSeleccionada = filterCategory.value;
+        if (categoriaSeleccionada) {
+            filtered = filtered.filter(p => p['Categoria'] === categoriaSeleccionada);
         }
 
-        // Filtro Solo Ofertas
+        // Filtro solo ofertas
         if (onlyOffers.checked) {
-            filtered = filtered.filter(p => p['Oferta'] === "Sí" || p['Oferta'] === true);
+            filtered = filtered.filter(p => p['Oferta'] === 'Sí' || p['Oferta'] === 'true' || p['Oferta'] === true);
         }
 
-        // Ordenamiento por Precio
+        // Ordenamiento por precio
         if (sortPrice.value === 'asc') {
             filtered.sort((a, b) => parseFloat(a['Precio']) - parseFloat(b['Precio']));
         } else if (sortPrice.value === 'desc') {
@@ -50,45 +55,62 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProducts(filtered);
     }
 
-    // 3. Renderizar productos en el HTML
+    // 3. Renderizar productos en pantalla
     function renderProducts(products) {
         productsGrid.innerHTML = '';
-        resultsCount.textContent = `${products.length} resultados encontrados`;
-        
+        resultsCount.textContent = `${products.length} producto(s) encontrado(s)`;
+
         if (products.length === 0) {
-            emptyState.classList.remove('hidden');
-        } else {
-            emptyState.classList.add('hidden');
-            products.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="product-image">
-                        ${(p['Oferta'] === "Sí" || p['Oferta'] === true) ? '<span class="offer-badge">Oferta</span>' : ''}
-                        <img src="${p['Link de la imagen']}" alt="${p['Nombre del producto']}">
-                    </div>
-                    <div class="product-body">
-                        <span class="product-business">${p['Nombre del negocio']}</span>
-                        <h3 class="product-name">${p['Nombre del producto']}</h3>
-                        <p class="product-desc">${p['Descripción']}</p>
-                        <div class="product-price">$${p['Precio']}</div>
-                    </div>
-                    <div class="product-foot">
-                        <a href="https://wa.me/${p['WhatsApp']}" target="_blank" class="btn btn-whatsapp">
-                            <i class="fa-brands fa-whatsapp"></i> Contactar
-                        </a>
-                    </div>
-                `;
-                productsGrid.appendChild(card);
-            });
+            productsGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <i class="fa-solid fa-store-slash" style="font-size: 2.5rem; color: #94A3B8;"></i>
+                    <h3 style="margin-top: 1rem;">No se encontraron productos</h3>
+                    <p>Intenta con otros filtros o categorías.</p>
+                </div>`;
+            return;
         }
+
+        products.forEach(p => {
+            const precio = parseFloat(p['Precio']).toFixed(2);
+            const oferta = p['Oferta'] === 'Sí' || p['Oferta'] === 'true' || p['Oferta'] === true;
+            const whatsapp = p['WhatsApp'] ? p['WhatsApp'].replace(/\D/g, '') : '';
+
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-image">
+                    ${oferta ? '<span class="offer-badge">🔥 Oferta</span>' : ''}
+                    <img src="${p['Link de la imagen']}" 
+                         alt="${p['Nombre del producto']}" 
+                         loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'">
+                </div>
+                <div class="product-body">
+                    <span class="product-business">
+                        <i class="fa-solid fa-store"></i> ${p['Nombre del negocio']}
+                    </span>
+                    <h3 class="product-name">${p['Nombre del producto']}</h3>
+                    <p class="product-desc">${p['Descripción']}</p>
+                    <div class="product-price">$${precio}</div>
+                </div>
+                <div class="product-foot">
+                    <a href="https://wa.me/593${whatsapp}" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="btn btn-whatsapp">
+                        <i class="fa-brands fa-whatsapp"></i> Contactar
+                    </a>
+                </div>
+            `;
+            productsGrid.appendChild(card);
+        });
     }
 
-    // 4. Listeners para detectar cambios en los filtros
-    [filterCategory, sortPrice, onlyOffers].forEach(el => {
-        el.addEventListener('change', applyFilters);
-    });
+    // 4. Event listeners para filtros
+    filterCategory.addEventListener('change', applyFilters);
+    sortPrice.addEventListener('change', applyFilters);
+    onlyOffers.addEventListener('change', applyFilters);
 
-    // Ejecutar inicialización
+    // 5. Cargar productos al iniciar
     fetchProducts();
 });
