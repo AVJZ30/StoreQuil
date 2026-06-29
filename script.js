@@ -99,7 +99,29 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // ========== 5. TIENDA ==========
+    // ========== 5. BOTÓN VOLVER ARRIBA ==========
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    if (backToTopBtn) {
+        // Mostrar/ocultar botón según scroll
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        // Scroll suave al hacer clic
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    // ========== 6. TIENDA ==========
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) {
         return; // No seguir si no estamos en la página de la tienda
