@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Producto</title>
+    <link rel="stylesheet" href="publicar.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Subir Nuevo Producto</h2>
+        <form id="publicar-form">
+            <input type="text" id="nombre" placeholder="Nombre del producto" required>
+            <input type="text" id="negocio" placeholder="Nombre del negocio" required>
+            <textarea id="descripcion" placeholder="Descripción breve" required></textarea>
+            <input type="url" id="imagen" placeholder="Link de la imagen (URL)" required>
+            <input type="text" id="whatsapp" placeholder="Tu número de WhatsApp (ej: 5939...)" required>
+            <input type="number" step="0.01" id="precio" placeholder="Precio ($)" required>
+            <input type="text" id="categoria" placeholder="Categoría (ej: Ropa, Comida...)" required>
+            <input type="text" id="oferta" placeholder="Oferta (Opcional)">
+            
+            <button type="submit" id="btn-submit">Publicar Producto</button>
+        </form>
+        <p id="mensaje-estado"></p>
+        <a href="index.html" class="link-volver">⬅ Volver al catálogo</a>
+    </div>
+
+    <script src="publicar.js"></script>
+</body>
+</html>
