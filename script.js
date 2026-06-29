@@ -1,47 +1,58 @@
 // =========================================================
-// StoreQuil — Script completo (FULL RESPONSIVE)
+// StoreQuil — Script completo (CON OVERLAY)
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // ========== 1. MENÚ MÓVIL MEJORADO ==========
+    // ========== 1. MENÚ MÓVIL MEJORADO CON OVERLAY ==========
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     const body = document.body;
 
+    // 🔥 Crear overlay para el menú
+    const overlay = document.createElement('div');
+    overlay.className = 'nav-overlay';
+    body.appendChild(overlay);
+
     if (navToggle && navLinks) {
+        function openMenu() {
+            navLinks.classList.add('open');
+            navToggle.classList.add('active');
+            overlay.classList.add('active');
+            body.style.overflow = 'hidden';
+            navToggle.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMenu() {
+            navLinks.classList.remove('open');
+            navToggle.classList.remove('active');
+            overlay.classList.remove('active');
+            body.style.overflow = '';
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+
         navToggle.addEventListener('click', () => {
-            const isOpen = navLinks.classList.toggle('open');
-            navToggle.classList.toggle('active');
-            
-            // Prevenir scroll cuando el menú está abierto
-            if (isOpen) {
-                body.style.overflow = 'hidden';
+            if (navLinks.classList.contains('open')) {
+                closeMenu();
             } else {
-                body.style.overflow = '';
+                openMenu();
             }
-            
-            // Actualizar aria-expanded
-            navToggle.setAttribute('aria-expanded', isOpen);
         });
 
         // Cerrar menú al hacer clic en un enlace
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                navLinks.classList.remove('open');
-                navToggle.classList.remove('active');
-                navToggle.setAttribute('aria-expanded', 'false');
-                body.style.overflow = '';
+                closeMenu();
             });
         });
 
-        // Cerrar menú al hacer clic fuera
-        document.addEventListener('click', (e) => {
-            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                navLinks.classList.remove('open');
-                navToggle.classList.remove('active');
-                navToggle.setAttribute('aria-expanded', 'false');
-                body.style.overflow = '';
+        // Cerrar menú al hacer clic en el overlay
+        overlay.addEventListener('click', closeMenu);
+
+        // Cerrar menú con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+                closeMenu();
             }
         });
     }
@@ -49,18 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== 2. NAVBAR SCROLL ==========
     const navbar = document.getElementById('navbar');
     if (navbar) {
-        let lastScroll = 0;
-        
         window.addEventListener('scroll', () => {
-            const currentScroll = window.scrollY;
-            
-            if (currentScroll > 50) {
+            if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
-            
-            lastScroll = currentScroll;
         });
     }
 
@@ -95,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 console.error('Error cargando estadísticas:', err);
-                homeProductCount.textContent = '+100'; // fallback
+                homeProductCount.textContent = '+100';
             });
     }
 
@@ -103,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const backToTopBtn = document.getElementById('backToTop');
     
     if (backToTopBtn) {
-        // Mostrar/ocultar botón según scroll
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) {
                 backToTopBtn.classList.add('visible');
@@ -112,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Scroll suave al hacer clic
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({
                 top: 0,
@@ -124,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== 6. TIENDA ==========
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) {
-        return; // No seguir si no estamos en la página de la tienda
+        return;
     }
 
     console.log('🛒 Página de tienda - cargando productos');
@@ -169,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFilters() {
         let filtered = [...allProducts];
 
-        // Filtro por Búsqueda (Texto)
         if (searchInput && searchInput.value) {
             const searchTerm = searchInput.value.toLowerCase().trim();
             filtered = filtered.filter(p => {
@@ -180,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Filtro por Categoría
         if (filterCategory && filterCategory.value) {
             filtered = filtered.filter(p => {
                 const cat = (p['Categoria'] || p['Categoría'] || '').trim();
@@ -188,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Filtro Solo Ofertas
         if (onlyOffers && onlyOffers.checked) {
             filtered = filtered.filter(p => {
                 const oferta = p['Oferta'] || '';
@@ -196,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Ordenamiento de Precio
         if (sortPrice && sortPrice.value === 'asc') {
             filtered.sort((a, b) => (parseFloat(a['Precio']) || 0) - (parseFloat(b['Precio']) || 0));
         } else if (sortPrice && sortPrice.value === 'desc') {
@@ -244,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${oferta ? '<span class="offer-badge">🔥 Oferta</span>' : ''}
                     ${categoria ? `<span class="category-badge">${categoria}</span>` : ''}
                     ${imagen ? 
-                        `<img src="${imagen}" alt="${nombre}" loading="lazy" onerror="this.parentElement.style.background='#F1F5F9'; this.style.display='none'; this.nextElementSibling.style.display='flex';">` :
+                        `<img src="${imagen}" alt="${nombre}" loading="lazy" onerror="this.parentElement.style.background='#F1F5F9'; this.style.display='none';">` :
                         `<div style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; font-size:3rem;">📦</div>`
                     }
                 </div>
@@ -269,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Listeners de los filtros con debounce para mejor rendimiento
     let debounceTimer;
     if (searchInput) {
         searchInput.addEventListener('input', () => {
@@ -281,6 +279,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sortPrice) sortPrice.addEventListener('change', applyFilters);
     if (onlyOffers) onlyOffers.addEventListener('change', applyFilters);
 
-    // Cargar productos
     fetchProducts();
 });
