@@ -52,15 +52,32 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach(el => observer.observe(el));
     }
 
-    // ========== 4. TIENDA ==========
+    // ========== 4. ESTADÍSTICAS EN TIEMPO REAL (HOME) ==========
+    const homeProductCount = document.getElementById('homeProductCount');
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzaBo8lu9zLlHM39lslJP076mMnh1UnuxiiFaVpV5Xth0_mwngEsjqVoi1blWHclm-OOw/exec';
+
+    if (homeProductCount) {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                const total = Array.isArray(data) ? data.length : 0;
+                homeProductCount.textContent = `+${total}`;
+            })
+            .catch(err => {
+                console.error('Error cargando estadísticas:', err);
+                homeProductCount.textContent = '+100'; // fallback
+            });
+    }
+
+    // ========== 5. TIENDA ==========
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) {
-        console.log('📄 Página de inicio');
-        return; // No seguir si no hay grid de productos
+        return; // No seguir si no estamos en la página de la tienda
     }
 
     console.log('🛒 Página de tienda - cargando productos');
 
+    const searchInput = document.getElementById('searchInput');
     const filterCategory = document.getElementById('filterCategory');
     const sortPrice = document.getElementById('sortPrice');
     const onlyOffers = document.getElementById('onlyOffers');
@@ -69,8 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let allProducts = [];
 
     async function fetchProducts() {
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzaBo8lu9zLlHM39lslJP076mMnh1UnuxiiFaVpV5Xth0_mwngEsjqVoi1blWHclm-OOw/exec';
-        
         try {
             productsGrid.innerHTML = `
                 <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
@@ -82,8 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             
             const data = await response.json();
-            console.log('✅ Productos:', data.length);
-            
             allProducts = Array.isArray(data) ? data : [];
             applyFilters();
             
@@ -104,6 +117,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFilters() {
         let filtered = [...allProducts];
 
+        // Filtro por Búsqueda (Texto)
+        if (searchInput && searchInput.value) {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            filtered = filtered.filter(p => {
+                const nombre = (p['Nombre del producto'] || '').toLowerCase();
+                const negocio = (p['Nombre del negocio'] || '').toLowerCase();
+                const desc = (p['Descripción'] || '').toLowerCase();
+                return nombre.includes(searchTerm) || negocio.includes(searchTerm) || desc.includes(searchTerm);
+            });
+        }
+
+        // Filtro por Categoría
         if (filterCategory && filterCategory.value) {
             filtered = filtered.filter(p => {
                 const cat = (p['Categoria'] || p['Categoría'] || '').trim();
@@ -111,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Filtro Solo Ofertas
         if (onlyOffers && onlyOffers.checked) {
             filtered = filtered.filter(p => {
                 const oferta = p['Oferta'] || '';
@@ -118,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Ordenamiento de Precio
         if (sortPrice && sortPrice.value === 'asc') {
             filtered.sort((a, b) => (parseFloat(a['Precio']) || 0) - (parseFloat(b['Precio']) || 0));
         } else if (sortPrice && sortPrice.value === 'desc') {
@@ -139,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="empty-state" style="grid-column: 1/-1;">
                     <i class="fa-solid fa-store-slash"></i>
                     <h3>Sin resultados</h3>
-                    <p>No se encontraron productos con esos filtros.</p>
+                    <p>No se encontraron productos con esos filtros o términos de búsqueda.</p>
                 </div>`;
             return;
         }
@@ -180,6 +207,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Listeners de los filtros y el buscador
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
     if (filterCategory) filterCategory.addEventListener('change', applyFilters);
     if (sortPrice) sortPrice.addEventListener('change', applyFilters);
     if (onlyOffers) onlyOffers.addEventListener('change', applyFilters);
