@@ -1,5 +1,5 @@
 // =========================================================
-// StoreQuil — Script completo (CON OVERLAY)
+// StoreQuil — Script completo (CON OVERLAY Y VISOR DE IMAGEN)
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -124,7 +124,71 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ========== 6. TIENDA ==========
+    // ========== 6. VISOR DE IMAGEN AMPLIADA ==========
+    function createImageViewer() {
+        // Crear overlay para la imagen ampliada
+        const viewerOverlay = document.createElement('div');
+        viewerOverlay.className = 'image-viewer-overlay';
+        viewerOverlay.innerHTML = `
+            <button class="image-viewer-close" aria-label="Cerrar imagen">
+                <i class="fa-solid fa-times"></i>
+            </button>
+            <div class="image-viewer-container">
+                <img src="" alt="Imagen ampliada" class="image-viewer-img">
+            </div>
+        `;
+        document.body.appendChild(viewerOverlay);
+
+        const viewerImg = viewerOverlay.querySelector('.image-viewer-img');
+        const closeBtn = viewerOverlay.querySelector('.image-viewer-close');
+
+        // Función para abrir imagen
+        function openImage(imgSrc, imgAlt) {
+            viewerImg.src = imgSrc;
+            viewerImg.alt = imgAlt;
+            viewerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Función para cerrar imagen
+        function closeImage() {
+            viewerOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            // Limpiar src después de la animación
+            setTimeout(() => {
+                viewerImg.src = '';
+            }, 300);
+        }
+
+        // Cerrar con botón
+        closeBtn.addEventListener('click', closeImage);
+
+        // Cerrar al hacer clic fuera de la imagen
+        viewerOverlay.addEventListener('click', (e) => {
+            if (e.target === viewerOverlay || e.target === viewerOverlay.querySelector('.image-viewer-container')) {
+                closeImage();
+            }
+        });
+
+        // Cerrar con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && viewerOverlay.classList.contains('active')) {
+                closeImage();
+            }
+        });
+
+        // Prevenir que el click en la imagen cierre el visor
+        viewerImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        return { openImage, closeImage };
+    }
+
+    // Inicializar visor de imágenes
+    const imageViewer = createImageViewer();
+
+    // ========== 7. TIENDA ==========
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) {
         return;
@@ -214,12 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (products.length === 0) {
             productsGrid.innerHTML = `
-                <div class="empty-state" style="grid-column: 1/-1;">
-                    <i class="fa-solid fa-store-slash"></i>
+                <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <i class="fa-solid fa-store-slash" style="font-size: 3rem; color: #94A3B8;"></i>
                     <h3>Sin resultados</h3>
                     <p>No se encontraron productos con esos filtros o términos de búsqueda.</p>
                     <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: #2563EB; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        Mostrar todos los productos
+                        <i class="fa-solid fa-rotate"></i> Mostrar todos los productos
                     </button>
                 </div>`;
             return;
@@ -243,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${oferta ? '<span class="offer-badge">🔥 Oferta</span>' : ''}
                     ${categoria ? `<span class="category-badge">${categoria}</span>` : ''}
                     ${imagen ? 
-                        `<img src="${imagen}" alt="${nombre}" loading="lazy" onerror="this.parentElement.style.background='#F1F5F9'; this.style.display='none';">` :
+                        `<img src="${imagen}" alt="${nombre}" loading="lazy" class="product-thumbnail" onerror="this.parentElement.style.background='#F1F5F9'; this.style.display='none';">` :
                         `<div style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; font-size:3rem;">📦</div>`
                     }
                 </div>
@@ -264,6 +328,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 </div>
             `;
+            
+            // 🔥 Agregar evento click a la imagen para abrir el visor
+            const productImg = card.querySelector('.product-thumbnail');
+            if (productImg && imagen) {
+                productImg.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    imageViewer.openImage(imagen, nombre);
+                });
+            }
+
             productsGrid.appendChild(card);
         });
     }
